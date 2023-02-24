@@ -28,4 +28,5 @@ class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig,
   val rejectInternalTraffic: Boolean = config.getOptional[Boolean]("microservice.rejectInternalTraffic").getOrElse(false)
   val internalAuthToken: String = config.get[String]("microservice.services.internal-auth.token")
   val insightsBaseUrl: String = servicesConfig.baseUrl("bank-account-insights")
+  val fullIppToken: String = config.get[String]("microservice.services.bank-account-insights.full-insights-token")
 }

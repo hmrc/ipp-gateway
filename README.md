@@ -1,7 +1,10 @@
 
 # ipp-gateway
 
-This is a placeholder README.md for a new repository
+The `ipp-gateway` service is for the use of `IPP` dept. 
+
+Using this service the `IPP` dept will be able to get the full insights response which will include not only the risk response but also the `ipp` response.
+
 
 ### License
 

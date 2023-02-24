@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
-class BankAccountInsightsController @Inject()(cc: ControllerComponents, config: AppConfig, connector: DownstreamConnector, val authConnector: AuthConnector)(implicit ec: ExecutionContext)
+class InsightsController @Inject()(cc: ControllerComponents, config: AppConfig, connector: DownstreamConnector, val authConnector: AuthConnector)(implicit ec: ExecutionContext)
   extends BackendController(cc) with ToggledAuthorisedFunctions {
 
   private val logger = Logger(this.getClass.getSimpleName)
@@ -38,7 +38,7 @@ class BankAccountInsightsController @Inject()(cc: ControllerComponents, config: 
       val path = request.target.uri.toString.replace("bank-account-gateway", "bank-account-insights")
       val url = s"${config.insightsBaseUrl}$path"
 
-      connector.forward(request, url, config.internalAuthToken)
+      connector.forward(request, url, config.internalAuthToken, config.fullIppToken)
     }
   }
 

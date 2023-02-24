@@ -19,8 +19,8 @@ package uk.gov.hmrc.ippgateway
 import play.api.Logger
 import play.api.http.HeaderNames._
 import play.api.http.{HttpEntity, MimeTypes}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.Results.{BadGateway, InternalServerError, MethodNotAllowed}
+import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import play.api.mvc.Results.{BadGateway, BadRequest, InternalServerError, MethodNotAllowed}
 import play.api.mvc.{AnyContent, Request, ResponseHeader, Result}
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpClient, HttpResponse}
 
@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DownstreamConnector @Inject()(httpClient: HttpClient) {
   private val logger = Logger(this.getClass.getSimpleName)
 
-  def forward(request: Request[AnyContent], url: String, authToken: String)(implicit ec: ExecutionContext): Future[Result] = {
+  def forward(request: Request[AnyContent], url: String, authToken: String, fullIppResponseToken: String)(implicit ec: ExecutionContext): Future[Result] = {
     import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
     logger.info(s"Forwarding to downstream url: $url")
@@ -42,7 +42,10 @@ class DownstreamConnector @Inject()(httpClient: HttpClient) {
         implicit val hc: HeaderCarrier = HeaderCarrier(authorization = Some(Authorization(authToken)))
 
         try {
-          httpClient.POST[Option[JsValue], HttpResponse](url = url, body = request.body.asJson, onwardHeaders)
+          val newJsonBody=
+            request.body.asJson.map(_.as[JsObject] + ("fullInsightsToken", JsString("")))
+
+          httpClient.POST[Option[JsValue], HttpResponse](url = url, body = newJsonBody, onwardHeaders)
             .map { response: HttpResponse =>
               val returnHeaders = response.headers
                 .filterNot { case (n, _) => n == CONTENT_TYPE || n == CONTENT_LENGTH }
