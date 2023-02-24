@@ -20,8 +20,8 @@ import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.StandardApplication
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthProviders}
-import uk.gov.hmrc.ippgateway.config.AppConfig
 import uk.gov.hmrc.ippgateway.{DownstreamConnector, ToggledAuthorisedFunctions}
+import uk.gov.hmrc.ippgateway.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}

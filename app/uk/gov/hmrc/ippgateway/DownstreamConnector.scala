@@ -43,9 +43,9 @@ class DownstreamConnector @Inject()(httpClient: HttpClient) {
 
         try {
           val newJsonBody=
-            request.body.asJson.map(_.as[JsObject] + ("fullInsightsToken", JsString("")))
+            request.body.asJson.get.as[JsObject] + ("fullInsightsToken", JsString(fullIppResponseToken))
 
-          httpClient.POST[Option[JsValue], HttpResponse](url = url, body = newJsonBody, onwardHeaders)
+          httpClient.POST[Option[JsValue], HttpResponse](url = url, body = Some(newJsonBody), onwardHeaders)
             .map { response: HttpResponse =>
               val returnHeaders = response.headers
                 .filterNot { case (n, _) => n == CONTENT_TYPE || n == CONTENT_LENGTH }
